@@ -23,12 +23,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.MaxDepth = 32; // Customize depth as needed
+    options.JsonSerializerOptions.MaxDepth = 32;
 });
 
 var app = builder.Build();
 
-// The below code is currently commented out but it is part of your initialization logic
+// The below code is currently commented out but it is part of my initialization logic
 /*
 using (var scope = app.Services.CreateScope())
 {

@@ -8,10 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import HomePage from '../Pages/HomePage';
 import GameSelect from '../Components/GameSelect';
 
-// Mock the useNavigate hook
 const mockNavigate = sinon.stub();
 
-// Mock axios to avoid actual API calls
 sinon.stub(axios, 'get').resolves({
     data: [
         { id: 1, gameName: 'Game 1' },
@@ -22,7 +20,6 @@ sinon.stub(axios, 'get').resolves({
 describe('HomePage Component Tests', () => {
 
     beforeEach(() => {
-        // Reset any mocks before each test
         mockNavigate.reset();
     });
 
@@ -33,7 +30,7 @@ describe('HomePage Component Tests', () => {
             </BrowserRouter>
         );
 
-        await waitFor(() => screen.getByText('Game 1')); // wait for the game to be rendered
+        await waitFor(() => screen.getByText('Game 1'));
         expect(screen.getByText('Game 1')).toBeInTheDocument();
         expect(screen.getByText('Game 2')).toBeInTheDocument();
     });
@@ -47,15 +44,12 @@ describe('HomePage Component Tests', () => {
 
         await waitFor(() => screen.getByText('Game 1'));
 
-        // Simulate selecting a game (this assumes that GameSelect is interacting with an onSelect function)
         const gameSelectButton = screen.getByText('Game 1');
         fireEvent.click(gameSelectButton);
 
-        // Simulate clicking the "Begin" button
         const beginButton = screen.getByText('Begin');
         fireEvent.click(beginButton);
 
-        // Check if navigate was called with the correct game path
         expect(mockNavigate.calledWith('/game/Game 1')).toBe(true);
     });
 
@@ -68,16 +62,13 @@ describe('HomePage Component Tests', () => {
 
         await waitFor(() => screen.getByText('Game 1'));
 
-        // Click the "Begin" button without selecting a game
         const beginButton = screen.getByText('Begin');
         const alertSpy = sinon.spy(window, 'alert');  // Mock window alert
 
         fireEvent.click(beginButton);
-
-        // Check if alert was triggered
         expect(alertSpy.calledWith('Please select a game first.')).toBe(true);
 
-        alertSpy.restore(); // Restore the original alert function
+        alertSpy.restore(); 
     });
 
 });
