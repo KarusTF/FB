@@ -1,44 +1,41 @@
-import React, { useEffect, useState } from 'react';
+// pages/HomePage.tsx
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GameSelect from '../Components/GameSelect';
 import CreateGameForm from '../Components/CreateGameForm';
-import axios from 'axios';
-
-export const fetchGames = async (setGames: (games: { id: number, gameName: string }[]) => void) => {
-    try {
-        const response = await axios.get('http://localhost:5154/api/FizzBuzzRules/games');
-        setGames(response.data);
-    } catch (error) {
-        console.error('Error fetching games:', error);
-    }
-};
-
-export const handleGameSelect = (gameName: string, setSelectedGame: (game: string | null) => void) => {
-    setSelectedGame(gameName);
-};
-
-export const handleBeginGame = (selectedGame: string | null, navigate: (path: string) => void) => {
-    if (selectedGame) {
-        navigate(`/game/${selectedGame}`);
-    } else {
-        alert('Please select a game first.');
-    }
-};
+import { gameService } from '../services/api';
 
 const HomePage: React.FC = () => {
-    const [games, setGames] = useState<{ id: number, gameName: string }[]>([]);
+    const [games, setGames] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchGames(setGames);
+        const fetchGames = async () => {
+            try {
+                const gameNames = await gameService.getGameNames();
+                setGames(gameNames);
+            } catch (error) {
+                alert('Failed to fetch games. Please try again.');
+            }
+        };
+        fetchGames();
     }, []);
+
+    const handleBeginGame = () => {
+        if (selectedGame) {
+            navigate(`/game/${selectedGame}`);
+        } else {
+            alert('Please select a game first.');
+        }
+    };
 
     return (
         <div>
             <h1>Welcome to FizzBuzz</h1>
-            <button onClick={() => handleBeginGame(selectedGame, navigate)}>Begin</button>
-            <GameSelect onSelect={(game) => handleGameSelect(game, setSelectedGame)} />
+            <button onClick={handleBeginGame}>Begin</button>
+            <GameSelect onSelect={setSelectedGame} />
             <CreateGameForm />
         </div>
     );

@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "target": "ES6",
     "module": "ESNext",
-    "target": "ESNext",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "moduleResolution": "node",
-    "strict": true
-  }
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "types": ["vitest/clients","@testing-library/jest-dom", "react-router-dom", "react", "react-dom"],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,9 +1,17 @@
 module.exports = {
-    preset: 'ts-jest',
+    moduleFileExtensions: ['js', 'jsx', 'json', 'vue'],
     transform: {
-        '^.+\\.(ts|tsx)?$': 'ts-jest',
-        '^.+\\.(js|jsx)$': 'babel-jest',
+        '^.+\\.vue$': 'vue2-jest',
+        '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
+            'jest-transform-stub',
+        '^.+\\.(js|jsx|ts|tsx|mjs)$': 'babel-jest'
     },
-    testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['./jest.setup.js'],
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1'
+    },
+    snapshotSerializers: ['jest-serializer-vue'],
+    testMatch: [
+        '<rootDir>/(tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx))'
+    ],
+    transformIgnorePatterns: ['node_modules/(?!(axios)/)']
 };

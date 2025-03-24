@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+// pages/GamePage.tsx
+import * as React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { gameService } from '../services/api';
+import { Game, AnswerSubmissionDTO, AnswerResultDTO } from '../Models/game';
 
 const GamePage: React.FC = () => {
     const { gameId } = useParams<{ gameId: string }>();
-    const [gameData, setGameData] = useState<any>(null);
+    const [gameData, setGameData] = useState<Game | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [gameActive, setGameActive] = useState<boolean>(false);
     const [timeRemaining, setTimeRemaining] = useState<number>(60);
@@ -12,20 +15,25 @@ const GamePage: React.FC = () => {
     const [correctAnswers, setCorrectAnswers] = useState<number>(0);
     const [incorrectAnswers, setIncorrectAnswers] = useState<number>(0);
     const [currentNumber, setCurrentNumber] = useState<number | null>(null);
+    const [generatedNumbers, setGeneratedNumbers] = useState<Set<number>>(new Set());
+    const [fetchingNumber, setFetchingNumber] = useState<boolean>(false); // Loading state for fetching next number
 
-    const answerInputRef = useRef<HTMLInputElement>(null); // Ref for input field
+    const answerInputRef = useRef<HTMLInputElement>(null);
 
+    // get game data
     useEffect(() => {
-        axios
-            .get(`http://localhost:5154/api/fizzbuzzrules/${gameId}`)
-            .then((response) => {
-                setGameData(response.data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching game data:', error);
-                setLoading(false);
-            });
+        if (gameId) {
+            gameService.getGameDefinition(gameId)
+                .then((data) => {
+                    setGameData(data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error fetching game data:', error);
+                    alert('Failed to fetch game data. Please try again later.');
+                    setLoading(false);
+                });
+        }
     }, [gameId]);
 
     useEffect(() => {
@@ -34,59 +42,97 @@ const GamePage: React.FC = () => {
                 setTimeRemaining((prevTime) => prevTime - 1);
             }, 1000);
             return () => clearInterval(timer);
-        } else if (timeRemaining === 0) {
+        } else if (timeRemaining === 0 && gameActive) { 
             setGameActive(false);
             alert('Time is up!');
         }
     }, [gameActive, timeRemaining]);
 
-    const handleStartGame = () => {
+    // Start the game
+    const handleStartGame = async () => {
         if (inputTime <= 0) {
             alert('Please enter a valid time.');
             return;
         }
-        setGameActive(true);
-        setCorrectAnswers(0);
-        setIncorrectAnswers(0);
-        setTimeRemaining(inputTime);
-        fetchNextRandomNumber();
-    };
 
-    const fetchNextRandomNumber = () => {
-        axios
-            .get(`http://localhost:5154/api/fizzbuzzgame/next/${gameId}`)
-            .then((response) => {
-                setCurrentNumber(response.data.randomNumber);
-            })
-            .catch((error) => {
-                console.error('Error fetching next random number:', error);
-            });
-    };
-
-    const handleSubmitAnswer = (answer: string) => {
-        if (currentNumber !== null) {
-            axios
-                .post(`http://localhost:5154/api/fizzbuzzgame/submit/${gameId}`, {
-                    number: currentNumber,
-                    answer,
-                })
-                .then((response) => {
-                    if (response.data.isCorrect) {
-                        setCorrectAnswers((prev) => prev + 1);
-                    } else {
-                        setIncorrectAnswers((prev) => prev + 1);
-                    }
-                    fetchNextRandomNumber();
-                    if (answerInputRef.current) {
-                        answerInputRef.current.value = ''; // Clear input field
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error submitting answer:', error);
-                });
+        try {
+            const response = await gameService.startGame(inputTime);
+            setGameActive(true);
+            setCorrectAnswers(0);
+            setIncorrectAnswers(0);
+            setTimeRemaining(inputTime);
+            setGeneratedNumbers(new Set()); // Reset generated numbers when starting a new game
+            await getNextRandomNumber(response.gameId); // Fetch the first random number
+        } catch (error) {
+            console.error('Error starting game:', error);
+            alert('Failed to start the game. Please try again.');
         }
     };
 
+    // Fetch the next random number
+    const getNextRandomNumber = async (gameId: string) => {
+        setFetchingNumber(true); // Set loading state
+        try {
+            let uniqueNumberFound = false;
+            let attempts = 0;
+            const maxAttempts = 10; // Prevent infinite loops
+
+            while (!uniqueNumberFound && attempts < maxAttempts) {
+                const newNumber = Math.floor(Math.random() * 100) + 1;
+                
+
+                if (!generatedNumbers.has(newNumber)) {
+                    setCurrentNumber(newNumber);
+                    setGeneratedNumbers((prev) => new Set(prev).add(newNumber)); // Add the new number to the set
+                    uniqueNumberFound = true;
+                } else {
+                    attempts++;
+                }
+            }
+
+            if (!uniqueNumberFound) {
+                alert('Failed to generate a unique number. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error fetching next random number:', error);
+            alert('Failed to fetch the next number. Please try again.');
+        } finally {
+            setFetchingNumber(false); // Reset loading state
+        }
+    };
+
+    // Submit the answer
+    const handleSubmitAnswer = async (answer: string) => {
+        if (currentNumber !== null && gameId) {
+            if (!answer.trim()) {
+                alert('Please enter an answer.');
+                return;
+            }
+
+            const submission: AnswerSubmissionDTO = {
+                number: currentNumber,
+                answer,
+            };
+
+            try {
+                const result: AnswerResultDTO = await gameService.submitAnswer(gameId, submission);
+                if (result.isCorrect) {
+                    setCorrectAnswers((prev) => prev + 1);
+                } else {
+                    setIncorrectAnswers((prev) => prev + 1);
+                }
+                await getNextRandomNumber(gameId);
+                if (answerInputRef.current) {
+                    answerInputRef.current.value = '';
+                }
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('Failed to submit your answer. Please try again.');
+            }
+        }
+    };
+
+    // Handle time input change
     const handleTimeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value, 10);
         if (!isNaN(value)) {
@@ -109,8 +155,8 @@ const GamePage: React.FC = () => {
 
             <h3>Divisor and Word Pairs:</h3>
             <ul>
-                {gameData.divisorWordPairs.$values.map((pair: any) => (
-                    <li key={pair.id}>
+                {gameData.divisorWordPairs.map((pair) => (
+                    <li>
                         <strong>Divisor:</strong> {pair.divisor} - <strong>Word:</strong> {pair.word}
                     </li>
                 ))}
@@ -136,15 +182,20 @@ const GamePage: React.FC = () => {
                     <p>Time Remaining: {timeRemaining}s</p>
                     <p>Current Number: {currentNumber}</p>
                     <input
-                        ref={answerInputRef} // Set ref
+                        ref={answerInputRef}
                         type="text"
                         placeholder="Enter your answer"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                handleSubmitAnswer((e.target as HTMLInputElement).value);
+                                // Handle the Promise returned by handleSubmitAnswer
+                                (async () => {
+                                    await handleSubmitAnswer((e.target as HTMLInputElement).value);
+                                })();
                             }
                         }}
+                        disabled={fetchingNumber} // Disable input while fetching the next number
                     />
+                    {fetchingNumber && <p>Loading next number...</p>}
                     <div>
                         <p>Incorrect answers: {incorrectAnswers}</p>
                         <p>Correct answers: {correctAnswers}</p>

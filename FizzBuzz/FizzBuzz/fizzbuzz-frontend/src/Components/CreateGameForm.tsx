@@ -1,131 +1,99 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+// components/CreateGameForm.tsx
+import * as React from 'react';
+import  { useState } from 'react';
+import { gameService } from '../services/api';
+import { DivisorWordPair } from '../Models/game';
 
 const CreateGameForm: React.FC = () => {
-    const [gameName, setGameName] = useState('');
-    const [author, setAuthor] = useState('');
-    const [divisorWordPairs, setDivisorWordPairs] = useState([
-        { divisor: 0, word: '' },
-        { divisor: 0, word: '' },
+    const [GameName, setGameName] = useState('');
+    const [Author, setAuthor] = useState('');
+    const [DivisorWordPairs, setDivisorWordPairs] = useState<DivisorWordPair[]>([
+        {fizzBuzzRuleId: 0,divisor: 0, word: '' },
+        {fizzBuzzRuleId: 0,divisor: 0, word: '' },
     ]);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Handle the changes in divisor or word input
-    const handleDivisorWordChange = (index: number, field: string, value: string) => {
-        const updatedDivisorWordPairs = [...divisorWordPairs]; // Create a shallow copy of the array
-        updatedDivisorWordPairs[index] = {
-            ...updatedDivisorWordPairs[index], // Copy the existing pair object
-            [field]: value, // Update the specific field
-        };
-        setDivisorWordPairs(updatedDivisorWordPairs); // Set the updated state
-    };
-
-    // Validate that all divisors are positive numbers
-    const isValidDivisors = () => {
-        return divisorWordPairs.every(pair => pair.divisor > 0);
+    const handleDivisorWordChange = (index: number, field: keyof DivisorWordPair, value: string | number) => {
+        const updatedPairs = [...DivisorWordPairs];
+        updatedPairs[index] = { ...updatedPairs[index], [field]: value };
+        setDivisorWordPairs(updatedPairs);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Must be positive number
-        if (!isValidDivisors()) {
-            setError('Divisors must be positive numbers');
+        
+
+        if (DivisorWordPairs.some(pair => pair.divisor <= 0)) {
+            setError('Divisors must be positive numbers.');
             return;
         }
 
-        setError(''); // Clear previous errors
+        const requestPayload = {
+            GameName:GameName,
+            Author: Author,
+            DivisorWordPairs: DivisorWordPairs.map(pair => ({
+                FizzBuzzRuleId: 0,
+                Divisor: pair.divisor,
+                Word: pair.word
+            })),
+        };
 
+        console.log("Payload:", requestPayload);
         try {
-            const response = await axios.post('http://localhost:5154/api/fizzbuzzrules', {
-                gameName: gameName,  
-                author: author,     
-                DPs: divisorWordPairs
-            });
-
-            if (response.data.gameName && response.data.author) {
-                setSuccessMessage(`Game Created Successfully! Game Name: ${response.data.gameName}, Author: ${response.data.author}`);
-            } else {
-                setError('Error: Missing required fields in the response.');
-            }
+            const createdGame = await gameService.createGame(requestPayload);
+            setSuccessMessage(`Game created successfully.`);
+            setError('');
         } catch (error) {
-            console.error('Error creating game:', error);
-            setError('Error creating game.');
+            setError('Failed to create game. Please try again.');
+            console.error(error);
         }
-
     };
-
 
     return (
         <form onSubmit={handleSubmit}>
             <h3>Create New Game</h3>
-
-            {/* Game Name */}
             <input
                 type="text"
                 placeholder="Game Name"
-                value={gameName}
+                value={GameName}
                 onChange={(e) => setGameName(e.target.value)}
                 required
             />
-
-            {/* Author */}
             <input
                 type="text"
                 placeholder="Author"
-                value={author}
+                value={Author}
                 onChange={(e) => setAuthor(e.target.value)}
                 required
             />
-
-            {/* Divisor-Word Pair 1 */}
-            <div>
-                <h4>Divisor-Word Pair 1</h4>
-                <input
-                    type="number"
-                    placeholder="Divisor 1"
-                    value={divisorWordPairs[0].divisor}
-                    onChange={(e) => handleDivisorWordChange(0, 'divisor', e.target.value)}
-                    min="1"
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="Word 1"
-                    value={divisorWordPairs[0].word}
-                    onChange={(e) => handleDivisorWordChange(0, 'word', e.target.value)}
-                    required
-                />
-            </div>
-
-            {/* Divisor-Word Pair 2 */}
-            <div>
-                <h4>Divisor-Word Pair 2</h4>
-                <input
-                    type="number"
-                    placeholder="Divisor 2"
-                    value={divisorWordPairs[1].divisor}
-                    onChange={(e) => handleDivisorWordChange(1, 'divisor', e.target.value)}
-                    min="1"
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="Word 2"
-                    value={divisorWordPairs[1].word}
-                    onChange={(e) => handleDivisorWordChange(1, 'word', e.target.value)}
-                    required
-                />
-            </div>
-
-            {/* Error and Success Messages */}
+            {DivisorWordPairs.map((pair, index) => (
+                <div key={index}>
+                    <h4>Divisor-Word Pair {index + 1}</h4>
+                    <input
+                        type="number"
+                        placeholder="Divisor"
+                        value={pair.divisor}
+                        onChange={(e) => handleDivisorWordChange(index, 'divisor', parseInt(e.target.value))}
+                        min="1"
+                        max="100"
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Word"
+                        value={pair.word}
+                        onChange={(e) => handleDivisorWordChange(index, 'word', e.target.value)}
+                        required
+                    />
+                </div>
+            ))}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-
             <button type="submit">Create Game</button>
         </form>
     );
 };
 
-export default CreateGameForm;
+export default CreateGameForm; 
