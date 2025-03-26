@@ -14,3 +14,7 @@ npm test
 Unit test backend:
 Navigate to /UnitTest/BackEnd
 dotnet test
+
+Pull Docker image: 
+docker pull karusn/fizzbuzz:latest
+
