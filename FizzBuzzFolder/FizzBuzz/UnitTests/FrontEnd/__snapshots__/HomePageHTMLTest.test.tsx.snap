@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HomePageForTesting - Static HTML Tests > renders basic structure without errors 1`] = `"<div><h1>Welcome to FizzBuzz</h1><button>Begin</button><div class="game-select-mock">GameSelect Mock</div><div class="create-form-mock">CreateGameForm Mock</div></div>"`;

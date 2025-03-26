@@ -1,0 +1,10 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/TestResults
+FizzBuzz/UnitTests/  
+Dockerfile
+README.md
+*.user
+*.suo
