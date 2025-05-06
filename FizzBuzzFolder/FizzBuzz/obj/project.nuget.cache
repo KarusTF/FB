@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U5DFq+d60vQ=",
+  "dgSpecHash": "6jRIhptU1n8=",
   "success": true,
-  "projectFilePath": "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/FizzBuzz.csproj",
+  "projectFilePath": "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/FizzBuzz.csproj",
   "expectedPackageFiles": [
     "/Users/karus/.nuget/packages/azure.core/1.38.0/azure.core.1.38.0.nupkg.sha512",
     "/Users/karus/.nuget/packages/azure.identity/1.11.4/azure.identity.1.11.4.nupkg.sha512",
@@ -214,7 +214,10 @@
     "/Users/karus/.nuget/packages/xunit.assert/2.9.3/xunit.assert.2.9.3.nupkg.sha512",
     "/Users/karus/.nuget/packages/xunit.core/2.9.3/xunit.core.2.9.3.nupkg.sha512",
     "/Users/karus/.nuget/packages/xunit.extensibility.core/2.9.3/xunit.extensibility.core.2.9.3.nupkg.sha512",
-    "/Users/karus/.nuget/packages/xunit.extensibility.execution/2.9.3/xunit.extensibility.execution.2.9.3.nupkg.sha512"
+    "/Users/karus/.nuget/packages/xunit.extensibility.execution/2.9.3/xunit.extensibility.execution.2.9.3.nupkg.sha512",
+    "/Users/karus/.nuget/packages/microsoft.netcore.app.ref/8.0.14/microsoft.netcore.app.ref.8.0.14.nupkg.sha512",
+    "/Users/karus/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.14/microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512",
+    "/Users/karus/.nuget/packages/microsoft.netcore.app.host.osx-x64/8.0.14/microsoft.netcore.app.host.osx-x64.8.0.14.nupkg.sha512"
   ],
   "logs": []
 }

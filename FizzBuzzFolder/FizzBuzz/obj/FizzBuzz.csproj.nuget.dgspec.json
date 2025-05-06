@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/FizzBuzz.csproj": {}
+    "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/FizzBuzz.csproj": {}
   },
   "projects": {
-    "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/FizzBuzz.csproj": {
+    "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/FizzBuzz.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/FizzBuzz.csproj",
+        "projectUniqueName": "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/FizzBuzz.csproj",
         "projectName": "FizzBuzz",
-        "projectPath": "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/FizzBuzz.csproj",
+        "projectPath": "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/FizzBuzz.csproj",
         "packagesPath": "/Users/karus/.nuget/packages/",
-        "outputPath": "/Users/karus/Documents/Rider/FizzBuzz/FizzBuzz/obj/",
+        "outputPath": "/Users/karus/Documents/Rider/FizzBuzzFolder/FizzBuzz/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/karus/.nuget/NuGet/NuGet.Config"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -91,6 +92,20 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "version": "[8.0.14, 8.0.14]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.14, 8.0.14]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -99,7 +114,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

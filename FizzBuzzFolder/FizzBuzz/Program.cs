@@ -5,9 +5,15 @@ using FizzBuzz.Services;
 //to start the project => dotnet build => dotnet run
 //navigate to fizzbuzz-frontend => npm run dev
 //test frontend: navigate to UnitTests/FrontEnd => npm test
-//test backend: navigate to UnitTests => dotnet test
+//test_ backend: navigate to UnitTests => dotnet test
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000);  // HTTP port
+    
+});
 
 builder.Services.AddScoped<IGameDefinitionService, GameDefinitionService>();
 builder.Services.AddScoped<IGamePlayService, GamePlayService>();
@@ -23,7 +29,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowLocalhost",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5155") // Allow frontend
+            policy.AllowAnyOrigin() 
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -32,15 +38,22 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build(); 
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); // Applies pending migrations
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
+
 app.UseCors("AllowLocalhost");
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
+app.UseStaticFiles(); 
+app.MapFallbackToFile("index.html");
 app.Run();
 

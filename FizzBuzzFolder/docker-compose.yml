@@ -1,0 +1,22 @@
+services:
+  fizzbuzz-app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/fizzbuzz.db
+    volumes:
+      - fizzbuzz-data:/app/data
+    networks:
+      - fizzbuzz-net
+    working_dir: /app  
+    command: dotnet FizzBuzz.dll  
+
+networks:
+  fizzbuzz-net:
+    driver: bridge
+
+volumes:
+  fizzbuzz-data:
