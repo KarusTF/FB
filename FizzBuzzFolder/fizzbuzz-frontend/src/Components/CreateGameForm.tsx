@@ -80,7 +80,7 @@ const CreateGameForm: React.FC = () => {
             {DivisorWordPairs.map((pair, index) => (
                 <div key={index}>
                     <h4>Divisor-Word Pair {index + 1}</h4>
-                    <input
+                    <input 
                         type="number"
                         placeholder="Divisor"
                         value={pair.divisor}
@@ -89,7 +89,7 @@ const CreateGameForm: React.FC = () => {
                         max="100"
                         required
                     />
-                    <input
+                    <input 
                         type="text"
                         placeholder="Word"
                         value={pair.word}
@@ -100,7 +100,7 @@ const CreateGameForm: React.FC = () => {
             ))}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-            <button type="submit">Create Game</button>
+            <button style={{ marginTop: '35px' }} type="submit">Create Game</button>
         </form>
     );
 };

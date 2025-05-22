@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
             <h1>Welcome to FizzBuzz</h1>
             <button onClick={handleBeginGame}>Begin</button>
             <GameSelect onSelect={setSelectedGame} />

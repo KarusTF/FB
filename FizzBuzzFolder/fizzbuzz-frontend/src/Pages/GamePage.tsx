@@ -173,7 +173,7 @@ const GamePage: React.FC = () => {
                             min="1"
                         />
                     </label>
-                    <button onClick={handleStartGame}>Start Game</button>
+                    <button style={{ marginLeft: '10px' }} onClick={handleStartGame}>Start Game</button>
                 </div>
             )}
 

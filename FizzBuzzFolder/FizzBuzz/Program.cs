@@ -6,7 +6,7 @@ using FizzBuzz.Services;
 //navigate to fizzbuzz-frontend => npm run dev
 //test frontend: navigate to UnitTests/FrontEnd => npm test
 //test_ backend: navigate to UnitTests => dotnet test
-//change appsetting.json defaultstring Host=localhost when run local
+//change appsetting.json defaultstring Host=localhost when run local, Host=db when docker
 
 var builder = WebApplication.CreateBuilder(args);
 
