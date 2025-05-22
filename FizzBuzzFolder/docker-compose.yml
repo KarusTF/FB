@@ -1,22 +1,31 @@
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: FB_database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d FB_database"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   fizzbuzz-app:
     build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=FB_database;Username=admin;Password=admin
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5000:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5000
-      - ConnectionStrings__DefaultConnection=Data Source=/app/data/fizzbuzz.db
-    volumes:
-      - fizzbuzz-data:/app/data
-    networks:
-      - fizzbuzz-net
-    working_dir: /app  
-    command: dotnet FizzBuzz.dll  
-
-networks:
-  fizzbuzz-net:
-    driver: bridge
+    restart: on-failure
 
 volumes:
-  fizzbuzz-data:
+  postgres_data:

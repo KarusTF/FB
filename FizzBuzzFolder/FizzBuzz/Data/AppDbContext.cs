@@ -8,6 +8,14 @@ namespace FizzBuzz.Data
         public DbSet<FizzBuzzRule> FizzBuzzRules { get; set; }
         public DbSet<DivisorWordPair> DivisorWordPairs { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=FB_database;Username=admin;Password=admin");
+            }
+        }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
