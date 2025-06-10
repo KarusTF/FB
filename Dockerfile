@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
 WORKDIR /src
 
-COPY ["FizzBuzz-BE.sln", "."]
+COPY ["FizzBuzz-BE/FizzBuzz-BE.sln", "."]
 COPY ["FizzBuzz-BE/FizzBuzz-BE.csproj", "FizzBuzz-BE/"]
 COPY ["FizzBuzz-BE/Migrations/", "FizzBuzz-BE/Migrations/"]
 
