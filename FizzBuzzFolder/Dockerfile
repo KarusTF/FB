@@ -1,31 +1,31 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
 WORKDIR /src
 
-COPY ["FizzBuzz.sln", "."]
-COPY ["FizzBuzz/FizzBuzz.csproj", "FizzBuzz/"]
-COPY ["FizzBuzz/Migrations/", "FizzBuzz/Migrations/"]
+COPY ["FizzBuzz-BE.sln", "."]
+COPY ["FizzBuzz-BE/FizzBuzz-BE.csproj", "FizzBuzz-BE/"]
+COPY ["FizzBuzz-BE/Migrations/", "FizzBuzz-BE/Migrations/"]
 
-RUN dotnet restore "FizzBuzz.sln"
+RUN dotnet restore "FizzBuzz-BE.sln"
 
-COPY FizzBuzz/ FizzBuzz/
+COPY FizzBuzz-BE/ FizzBuzz-BE/
 
 
-RUN rm -rf /src/FizzBuzz/bin /src/FizzBuzz/obj
+RUN rm -rf /src/FizzBuzz-BE/bin /src/FizzBuzz-BE/obj
 
-RUN dotnet build "FizzBuzz/FizzBuzz.csproj" -c Release --no-incremental
-RUN dotnet publish "FizzBuzz/FizzBuzz.csproj" -c Release -o /src/publish
+RUN dotnet build "FizzBuzz-BE/FizzBuzz-BE.csproj" -c Release --no-incremental
+RUN dotnet publish "FizzBuzz-BE/FizzBuzz-BE.csproj" -c Release -o /src/publish
 
 RUN ls /src/publish
 
 FROM node:18 AS frontend-build
 WORKDIR /frontend
 
-COPY fizzbuzz-frontend/package.json .
-COPY fizzbuzz-frontend/package-lock.json .  
+COPY fizzbuzz-client/package.json .
+COPY fizzbuzz-client/package-lock.json .  
 
 RUN npm install  
 
-COPY fizzbuzz-frontend/. .
+COPY fizzbuzz-client/. .
 
 RUN npm run build
 
@@ -37,4 +37,4 @@ COPY --from=frontend-build /frontend/dist /app/wwwroot
 
 ENV ASPNETCORE_URLS=http://+:5000
 
-ENTRYPOINT ["dotnet", "FizzBuzz.dll"]
+ENTRYPOINT ["dotnet", "FizzBuzz-BE.dll"]
