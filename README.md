@@ -12,9 +12,11 @@ Docker Usage
 --------------------------
 
 1. Build Docker Images:
+   ```bash
    docker-compose build
 
 2. Run with Docker:
+   ```bash
    docker-compose up
 
 --------------------------
@@ -26,7 +28,7 @@ Local Development
    dotnet build
    dotnet run
 
-3. Run Frontend:
+2. Run Frontend:
    ```bash
    cd fizzbuzz-frontend
    npm install
@@ -37,10 +39,12 @@ Running Tests
 --------------------------
 
 1. Backend Unit Tests:
+   ```bash
    cd UnitTests
    dotnet test
 
 2. Frontend Unit Tests:
+   ```bash
    cd UnitTests/FrontEnd
    npm install
    npm test
