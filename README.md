@@ -31,7 +31,6 @@ Local Development
 2. Run Frontend:
    ```bash
    cd fizzbuzz-frontend
-   npm install
    npm run dev
 
 --------------------------
@@ -45,6 +44,5 @@ Running Tests
 
 2. Frontend Unit Tests:
    ```bash
-   cd UnitTests/FrontEnd
-   npm install
+   cd fizzbuzz-client/UnitTests/FrontEnd
    npm test
