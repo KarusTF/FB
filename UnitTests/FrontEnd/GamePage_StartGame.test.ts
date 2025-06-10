@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 
-import GamePage from '../../fizzbuzz-frontend/src/Pages/GamePage';
-import { gameService } from '../../fizzbuzz-frontend/src/services/api';
+import GamePage from '../../FizzBuzz-Client/src/Pages/GamePage';
+import { gameService } from '../../FizzBuzz-Client/src/services/api';
 
 
 global.alert = vi.fn();

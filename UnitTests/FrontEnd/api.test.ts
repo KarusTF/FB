@@ -1,8 +1,8 @@
 // services/api.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
-import { gameService } from '../../fizzbuzz-frontend/src/services/api';
-import { Game, DivisorWordPair, AnswerSubmissionDTO, AnswerResultDTO } from '../../fizzbuzz-frontend/src/Models/game';
+import { gameService } from '../../FizzBuzz-Client/src/services/api';
+import { Game, DivisorWordPair, AnswerSubmissionDTO, AnswerResultDTO } from '../../FizzBuzz-Client/src/Models/game';
 
 vi.mock('axios');
 

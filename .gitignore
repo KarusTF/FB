@@ -1,0 +1,12 @@
+node_modules/
+.idea
+dist/
+build/
+.env
+.vscode/
+*.log
+bin/
+obj/
+.DS_Store
+FizzBuzz
+./publish

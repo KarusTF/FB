@@ -150,7 +150,7 @@ const GamePage: React.FC = () => {
 
     return (
         <div>
-            <h1>{gameData.gameName} - Game Page</h1>
+            <h1>{gameData.gameName} - Let's start</h1>
             <p>Author: {gameData.author}</p>
 
             <h3>Divisor and Word Pairs:</h3>

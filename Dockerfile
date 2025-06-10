@@ -20,12 +20,12 @@ RUN ls /src/publish
 FROM node:18 AS frontend-build
 WORKDIR /frontend
 
-COPY fizzbuzz-client/package.json .
-COPY fizzbuzz-client/package-lock.json .  
+COPY FizzBuzz-Client/package.json .
+COPY FizzBuzz-Client/package-lock.json .  
 
 RUN npm install  
 
-COPY fizzbuzz-client/. .
+COPY FizzBuzz-Client/. .
 
 RUN npm run build
 
