@@ -22,10 +22,12 @@ Local Development
 --------------------------
 
 1. Run Backend:
+   ```bash
    dotnet build
    dotnet run
 
-2. Run Frontend:
+3. Run Frontend:
+   ```bash
    cd fizzbuzz-frontend
    npm install
    npm run dev
